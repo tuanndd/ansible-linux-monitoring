@@ -80,7 +80,7 @@ Add this entry to file /etc/hosts on Vagrant computer:
 ```
 Then access url https://grafana.local.com (login info: username=admin, password=admin)
 
-Here are some screens you will on Grafana.
+Here are some screens you will see on Grafana.
 
 ![](screenshots/node-exporter-metrics.png)
 ![](screenshots/prometheus-metrics.png)
