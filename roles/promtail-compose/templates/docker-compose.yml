@@ -1,0 +1,26 @@
+---
+version: '3.8'
+
+volumes:
+  promtail_data: {}
+
+services:
+  promtail:
+    image: grafana/promtail:2.4.2
+    container_name: promtail
+    command:
+      - '-config.file=/etc/promtail/promtail-config.yml'
+    restart: unless-stopped
+    env_file:
+      - tz.env
+{% if loki_host_ip is defined %}      
+    extra_hosts:
+      - "{{loki_host_ip}}"
+{% endif %}      
+    volumes:
+      - promtail_data:/promtail
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/log/auth.log:/log/auth.log
+      - /var/log/apt/history.log:/log/apt.log
+      - /var/log/audit/audit.log:/log/auditd.log
+      - /var/log/journal:/log/journal

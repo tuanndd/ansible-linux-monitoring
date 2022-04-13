@@ -1,0 +1,53 @@
+---
+# defaults file for nginx-grafana-compose
+service_name: nginx-grafana
+docker_username: vagrant
+
+install_dir: /opt/nginx-grafana
+
+timezone: Asia/Ho_Chi_Minh
+
+loki_username: test
+loki_password: test
+loki_password_hash: "{{loki_password | password_hash('bcrypt')}}"
+loki_tentant: loki
+
+prometheus_username: test
+prometheus_password: test
+
+cert_domain: "local.com"
+
+grafana_dashboards:
+  - dashboard_id: '1860'
+    revision_id: '26'
+    datasource: 'Prometheus'
+  - dashboard_id: '3662'
+    revision_id: '2'
+    datasource: 'Prometheus'
+  - dashboard_id: '13407'
+    revision_id: '1'
+    datasource: 'Prometheus'
+
+grafana_datasources:
+  - name: "Prometheus"
+    type: "prometheus"
+    # editable: true
+    access: "proxy"
+    url: "https://host.docker.internal:9090"
+    basicAuth: true
+    basicAuthUser: "{{prometheus_username}}"
+    jsonData:
+      tlsSkipVerify: true
+    secureJsonData:
+      basicAuthPassword: "{{prometheus_password}}"
+  - name: "Loki"
+    type: "loki"
+    # editable: true
+    access: "proxy"
+    url: "http://host.docker.internal:3100"
+    basicAuth: false
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
+    secureJsonData:
+      httpHeaderValue1: "{{loki_tentant}}"
+    

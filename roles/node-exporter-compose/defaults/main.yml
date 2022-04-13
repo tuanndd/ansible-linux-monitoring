@@ -1,0 +1,15 @@
+---
+# defaults file for node-exporter-compose
+docker_username: vagrant
+
+install_dir: /opt/node-exporter
+
+service_name: node-exporter
+
+timezone: Asia/Ho_Chi_Minh
+
+cert_domain: local.com
+
+node_exporter_username: test
+node_exporter_password: test
+node_exporter_password_hash: "{{node_exporter_password | password_hash('bcrypt')}}"

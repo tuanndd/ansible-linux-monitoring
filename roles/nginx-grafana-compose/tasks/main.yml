@@ -1,0 +1,74 @@
+---
+# tasks file for nginx-grafana-compose
+
+- name: secure dir
+  file:
+    path: "{{install_dir}}"
+    state: directory
+    owner: "{{docker_username}}"
+    group: docker
+    mode: 0700
+
+- name: create dir
+  file:
+    path: "{{install_dir}}/{{item}}"
+    state: directory
+  with_items:
+    - grafana
+    - grafana/provisioning
+    - grafana/provisioning/dashboards
+    - grafana/provisioning/datasources
+
+- name: copy files
+  copy:
+    src: .
+    dest: "{{ install_dir }}/"
+
+- name: copy templates
+  template:
+    src: "{{item}}"
+    dest: "{{install_dir}}/{{item}}"
+  loop:
+    - tz.env
+    - nginx/loki_passwords
+    - nginx/grafana.conf
+    - nginx/loki.conf
+    - nginx/snippets/self-signed.conf
+
+- name: copy cert.crt
+  copy:
+    src: "./certs/{{cert_domain}}.crt"
+    dest: "{{install_dir}}/nginx/certs/{{cert_domain}}.crt"
+
+- name: copy cert.key
+  copy:
+    src: "./certs/{{cert_domain}}.key"
+    dest: "{{install_dir}}/nginx/certs/{{cert_domain}}.key"
+
+- include: datasources.yml
+  when: grafana_datasources != []
+
+- include: dashboards.yml
+  when: grafana_dashboards | length > 0
+
+- name: create service file
+  template:
+    src: nginx-grafana.service
+    dest: /etc/systemd/system/{{service_name}}.service
+
+- name: start service
+  systemd: name={{service_name}} state=started enabled=yes daemon_reload=yes
+
+- name: test service
+  uri:
+    url: "{{item}}"
+  
+    validate_certs: no
+    remote_src: true
+  with_items:
+    - https://grafana.{{cert_domain}}
+    - https://loki.{{cert_domain}}/ready
+  register: response
+  until: response.status == 200
+  retries: 10
+  delay: 600

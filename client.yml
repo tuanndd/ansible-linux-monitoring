@@ -1,0 +1,32 @@
+- name: use playbook
+  hosts: client
+  become: true
+
+  vars:
+    etc_hosts:
+      - 192.168.3.102 grafana.local.com
+      - 192.168.3.102 loki.local.com
+
+    cert_domain: local.com
+    cert_insecure: 1
+
+    loki_host_ip: loki.local.com:192.168.3.102
+    loki_url: https://test:test@loki.local.com
+    loki_tentant: test
+    
+    node_exporter_username: test
+    node_exporter_password: test
+    node_exporter_password_hash: "{{node_exporter_password | password_hash('bcrypt')}}"
+
+    docker_username: vagrant
+
+    timezone: Asia/Ho_Chi_Minh
+
+  roles:
+    - role: common
+    - role: auditd
+    - role: docker
+    - role: loki-driver
+    - role: node-exporter-compose
+    - role: promtail-compose
+

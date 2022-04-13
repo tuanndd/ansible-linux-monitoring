@@ -1,0 +1,92 @@
+---
+# tasks file for prometheus
+- name: create group
+  group: name=prometheus system=true state=present
+
+- name: create user
+  user: name=prometheus system=true shell=/usr/sbin/nologin group=prometheus createhome=false home={{install_dir}}
+
+- name: secure dir
+  file:
+    path: "{{install_dir}}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0700
+
+- name: create dir
+  file:
+    path: "{{install_dir}}/{{item}}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+  with_items:
+    - bin
+    - etc
+    - etc/certs
+    - data
+    - tmp
+
+- name: check version
+  command: "{{install_dir}}/bin/prometheus --version"
+  failed_when: false
+  changed_when: false
+  register: check_version
+
+- name: download prometheus
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/prometheus/releases/download/v{{prometheus_version}}/prometheus-{{prometheus_version}}.linux-amd64.tar.gz
+    dest: "{{install_dir}}/tmp"
+  register: check_download
+  when: check_version.stdout is not defined
+
+- name: copy files
+  shell: |
+    cp -r tmp/prometheus-{{prometheus_version}}.linux-amd64/prometheus bin/
+    cp -r tmp/prometheus-{{prometheus_version}}.linux-amd64/consoles etc/
+    cp -r tmp/prometheus-{{prometheus_version}}.linux-amd64/console_libraries etc/
+  args:
+    chdir: "{{install_dir}}"
+  when: check_download is changed
+
+- name: copy templates
+  template:
+    src: "{{item}}"
+    dest: "{{install_dir}}/etc/"
+  loop:
+    - prometheus.yml
+    - web.yml 
+
+- name: copy cert.crt
+  copy:
+    src: "./certs/{{cert_domain}}.crt"
+    dest: "{{install_dir}}/etc/certs/{{cert_domain}}.crt"
+
+- name: copy cert.key
+  copy:
+    src: "./certs/{{cert_domain}}.key"
+    dest: "{{install_dir}}/etc/certs/{{cert_domain}}.key"
+
+- name: create service file
+  template:
+    src: prometheus.service
+    dest: /etc/systemd/system/{{service_name}}.service
+
+- name: start service
+  systemd: name={{service_name}} state=started enabled=yes daemon_reload=yes
+
+- name: test service
+  uri:
+    url: https://localhost:9090/
+    method: GET
+    validate_certs: no
+    remote_src: true
+    user: "{{prometheus_username}}"
+    password: "{{prometheus_password}}"
+    force_basic_auth: yes
+    status_code: 200
+  retries: 3
+  delay: 30
+
+

@@ -1,0 +1,17 @@
+---
+# tasks file for auditd
+- name: install auditd service
+  apt: name=auditd state=present
+
+- name: update auditd.conf
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^log_format\s*=\s*RAW.*$'
+    line: 'log_format = ENRICHED'
+    backup: yes
+
+- name: create auditd.rules
+  copy:
+    src: ./auditd.rules/
+    dest: /etc/audit/rules.d/
+  notify: restart auditd

@@ -1,0 +1,18 @@
+---
+# defaults file for prometheus
+
+service_name: prometheus
+install_dir: /opt/prometheus
+
+cert_domain: local.com
+cert_insecure: 1
+
+prometheus_version: 2.34.0
+prometheus_username: test
+prometheus_password: test
+prometheus_password_hash: "{{prometheus_password | password_hash('bcrypt')}}"
+
+node_exporter_username: test
+node_exporter_password: test
+node_exporter_targets:
+  - localhost:9100

@@ -1,0 +1,12 @@
+[Unit]
+Description={{service_name}} service
+After=network.target
+
+[Service]
+Type=simple
+User=loki
+
+ExecStart={{install_dir}}/bin/loki-linux-amd64 -config.file={{install_dir}}/etc/loki-config.yml
+
+[Install]
+WantedBy=multi-user.target

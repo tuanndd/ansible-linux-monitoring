@@ -1,0 +1,7 @@
+---
+# defaults file for loki
+
+service_name: loki
+
+install_dir: /opt/loki
+loki_version: v2.4.2

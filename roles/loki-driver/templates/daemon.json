@@ -1,0 +1,15 @@
+{
+    "debug" : true,
+    "log-driver": "loki",
+    "log-opts": {
+        "loki-url": "{{loki_url}}/loki/api/v1/push",
+        "loki-tenant-id": "{{loki_tenant}}",
+        "loki-batch-size": "400",
+        "loki-retries":"0",
+{% if cert_insecure is defined %}        
+        "loki-tls-insecure-skip-verify": "true",
+{% endif %}
+        "loki-external-labels": "job=dockerlogs,server={{ansible_host}},{% raw %}container_name={{.Name}},image_name={{.ImageName}}{% endraw %}",
+        "keep-file": "true"
+    }
+}

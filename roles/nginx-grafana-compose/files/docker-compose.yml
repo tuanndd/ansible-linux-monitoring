@@ -1,0 +1,51 @@
+---
+version: '3.8'
+
+networks:
+  monitoring:
+
+volumes:
+  grafana_data: {}
+
+services:
+  nginx:
+    image: nginx:1.21.6-alpine
+    container_name: nginx
+    restart: unless-stopped
+    env_file:
+      - ./tz.env
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/dhparam.pem:/etc/nginx/dhparam.pem
+      - ./nginx/snippets:/etc/nginx/snippets
+      - ./nginx/loki_passwords:/etc/nginx/loki_passwords
+      - ./nginx/grafana.conf:/etc/nginx/conf.d/grafana.conf
+      - ./nginx/loki.conf:/etc/nginx/conf.d/loki.conf
+    ports:
+      - 80:80
+      - 443:443
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - monitoring
+    depends_on:
+      - grafana
+
+  grafana:
+    image: grafana/grafana-oss:8.4.4
+    container_name: grafana
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - 3000:3000
+    env_file:
+      - ./tz.env
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+      - monitoring

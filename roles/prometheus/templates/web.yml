@@ -1,0 +1,5 @@
+tls_server_config:
+  cert_file: {{install_dir}}/etc/certs/{{cert_domain}}.crt
+  key_file: {{install_dir}}/etc/certs/{{cert_domain}}.key
+basic_auth_users:
+  {{prometheus_username}}: {{prometheus_password_hash}}

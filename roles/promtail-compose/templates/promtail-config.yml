@@ -1,0 +1,34 @@
+server:
+  disable: true
+  # http_listen_port: 9080
+  # grpc_listen_port: 0
+
+positions:
+  filename: /promtail/positions.yaml
+
+clients:
+- url: {{loki_url}}/loki/api/v1/push
+{% if cert_insecure is defined %}
+  tls_config:
+    insecure_skip_verify: true
+{% endif %}
+  tenant_id: {{loki_tentant}}
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: varlogs
+      server: {{ ansible_host }}
+      __path__: /log/*.log
+- job_name: journal
+  journal:
+    path: /log/journal
+    labels:
+      server: {{ ansible_host }}
+      job: systemd-journal
+  relabel_configs:
+     - source_labels: ['__journal__systemd_unit']
+       target_label: 'unit'

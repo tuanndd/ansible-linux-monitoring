@@ -1,0 +1,18 @@
+[Unit]
+Description={{service_name}} service
+After=network.target
+
+[Service]
+Type=simple
+User=prometheus
+
+ExecStart={{install_dir}}/bin/prometheus \
+    --config.file={{install_dir}}/etc/prometheus.yml \
+    --web.enable-lifecycle \
+    --web.config.file={{install_dir}}/etc/web.yml \
+    --storage.tsdb.path={{install_dir}}/data \
+    --web.console.libraries={{install_dir}}/etc/console_lissubraries \
+    --web.console.templates={{install_dir}}/etc/consoles
+
+[Install]
+WantedBy=multi-user.target

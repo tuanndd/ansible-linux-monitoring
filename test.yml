@@ -1,0 +1,21 @@
+- name: use playbook
+  hosts:
+    - local
+  become: true
+  # gather_facts: false
+
+  vars:
+    timezone: Asia/Ho_Chi_Minh
+
+  # pre_tasks:
+  #   - name: change timezone
+  #     community.general.timezone:
+  #       name: "{{ timezone }}"
+    # - name: change timezone
+    #   include_role:
+    #     name: common
+    #     tasks_from: change-timezone
+  
+  roles:
+    - role: common
+    # - role: prometheus

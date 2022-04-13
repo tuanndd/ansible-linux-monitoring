@@ -1,0 +1,17 @@
+---
+# tasks file for loki-driver
+- name: copy templates
+  template:
+    src: daemon.json
+    dest: /etc/docker/
+    backup: yes
+- name: install loki docker driver
+  shell: docker plugin install grafana/loki-docker-driver:{{ loki_version }} --alias loki --grant-all-permissions
+  ignore_errors: true
+- name: config docker
+  template:
+    src: daemon.json
+    dest: /etc/docker/
+    mode: '0600'
+    backup: yes
+  notify: restart docker

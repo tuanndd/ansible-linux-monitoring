@@ -1,0 +1,9 @@
+[local]
+localhost ansible_connection=local
+
+[server]
+h2 ansible_connection=ssh ansible_host=192.168.3.102 ansible_user=vagrant ansible_ssh_pass=vagrant
+
+[client]
+h3 ansible_connection=ssh ansible_host=192.168.3.103 ansible_user=vagrant ansible_ssh_pass=vagrant
+

@@ -1,0 +1,7 @@
+---
+# defaults file for common
+timezone: Asia/Ho_Chi_Minh
+
+etc_hosts:
+  - 192.168.3.102 grafana.local.com
+  - 192.168.3.102 loki.local.com

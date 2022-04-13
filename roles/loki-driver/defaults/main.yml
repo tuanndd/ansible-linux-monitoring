@@ -1,0 +1,9 @@
+---
+# defaults file for loki-driver
+loki_tenant: test
+loki_url: http://localhost:3100
+# loki_url: https://test:test@loki.local.com
+
+loki_version: 2.4.2
+
+cert_insecure: 1
