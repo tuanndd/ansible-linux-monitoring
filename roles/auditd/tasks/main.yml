@@ -1,9 +1,13 @@
 ---
 # tasks file for auditd
 - name: install auditd service
-  apt: name=auditd state=present
+  apt: 
+    pkg:
+      - auditd 
+    state: present
 
-- name: update auditd.conf
+# See: https://man7.org/linux/man-pages/man5/auditd.conf.5.html
+- name: edit auditd log format
   lineinfile:
     path: /etc/audit/auditd.conf
     regexp: '^log_format\s*=\s*RAW.*$'
