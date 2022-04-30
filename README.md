@@ -13,7 +13,7 @@ I tested scripts on my own computer but there maybe still have some bugs. Please
 vagrant box add bento/ubuntu-20.04 --insecure
 ```
 
-### 1.1 Run server (hostname=h2, ip=192.168.3.102)
+### 1.1 Run server (hostname=h2, ip=192.168.57.101)
 ```bash
 vagrant up h2
 vagrant ssh h2
@@ -27,7 +27,7 @@ pip3 install passlib --user
 exit
 ```
 
-### 1.2 Run client (hostname=h3, ip=192.168.3.103)
+### 1.2 Run client (hostname=h3, ip=192.168.57.102)
 ```bash
 vagrant up h3
 vagrant ssh h3
@@ -76,7 +76,7 @@ exit
 # 2.4 Access Grafana dashboard
 Add this entry to file /etc/hosts on Vagrant computer:
 ```
-192.168.3.102 grafana.local.com
+192.168.57.101 grafana.local.com
 ```
 Then access url https://grafana.local.com (login info: username=admin, password=admin)
 

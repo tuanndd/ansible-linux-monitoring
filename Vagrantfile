@@ -26,13 +26,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :h2 do |h2|
     h2.vm.hostname="h2.local.com"
-    h2.vm.network :private_network, ip: "192.168.3.102"
+    h2.vm.network :private_network, ip: "192.168.57.101"
 #
   end
 
   config.vm.define :h3 do |h3|
     h3.vm.hostname="h3.local.com"
-    h3.vm.network :private_network, ip: "192.168.3.103"
+    h3.vm.network :private_network, ip: "192.168.57.102"
 #
   end
 
