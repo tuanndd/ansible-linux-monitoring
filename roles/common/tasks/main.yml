@@ -17,3 +17,7 @@
     pkg:
       - net-tools
       - unzip
+      - vim
+      - git
+      - curl
+    state: present
