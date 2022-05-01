@@ -33,14 +33,13 @@
 
     timezone: Asia/Ho_Chi_Minh
 
-  
   roles:
     - role: common
     - role: auditd
     - role: prometheus
-    # - role: loki
+    - role: loki
     - role: docker
-    # - role: loki-driver
+    - role: loki-driver
     # - role: nginx-grafana-compose
     # - role: node-exporter-compose
     # - role: promtail-compose

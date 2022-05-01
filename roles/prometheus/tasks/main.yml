@@ -113,7 +113,6 @@
     password: "{{prometheus_password}}"
     force_basic_auth: yes
     status_code: 200
+  no_log: true
   retries: 3
   delay: 30
-
-

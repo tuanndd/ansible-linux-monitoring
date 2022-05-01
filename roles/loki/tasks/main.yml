@@ -1,12 +1,21 @@
 ---
 # tasks file for loki
 - name: create group
-  group: name=loki system=true state=present
+  group: 
+    name: loki 
+    system: true
+    state: present
 
 - name: create user
-  user: name=loki system=true shell=/usr/sbin/nologin group=loki createhome=false home={{install_dir}}
+  user: 
+    name: loki 
+    system: true 
+    shell: /usr/sbin/nologin
+    group: loki
+    createhome: false
+    home: "{{install_dir}}"
 
-- name: secure dir
+- name: restrict access to dir
   file:
     path: "{{install_dir}}"
     state: directory
@@ -30,6 +39,7 @@
   command: "{{install_dir}}/bin/loki-linux-amd64 -version"
   failed_when: false
   changed_when: false
+  ignore_errors: true
   register: check_version
 
 - name: download loki
@@ -38,20 +48,28 @@
     src: https://github.com/grafana/loki/releases/download/{{ loki_version }}/loki-linux-amd64.zip
     dest: "{{install_dir}}/bin/"
     mode: '+x'
-  when: check_version.stdout is not defined
+  when: check_version.rc != 0
 
 - name: copy templates
   template:
     src: loki-config.yml
     dest: "{{install_dir}}/etc/"
+  notify:
+    - reload loki
 
 - name: create service file
   template:
     src: loki.service
     dest: /etc/systemd/system/{{service_name}}.service
+  notify:
+    - restart loki
 
 - name: start service
-  systemd: name={{service_name}} state=started enabled=yes daemon_reload=yes
+  systemd:
+    name: "{{service_name}}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
 
 - name: test service
   uri:
