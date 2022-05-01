@@ -1,10 +1,14 @@
 [Unit]
 Description={{service_name}} service
-After=network.target
+After=network-online.target
+Requires=local-fs.target
+After=local-fs.target
 
 [Service]
 Type=simple
 User=prometheus
+Group=prometheus
+ExecReload=/bin/kill -HUP $MAINPID
 
 ExecStart={{install_dir}}/bin/prometheus \
     --config.file={{install_dir}}/etc/prometheus.yml \

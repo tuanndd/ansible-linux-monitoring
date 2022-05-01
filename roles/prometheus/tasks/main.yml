@@ -13,7 +13,7 @@
     shell: /usr/sbin/nologin
     group: prometheus
     createhome: false 
-    home: {{install_dir}}
+    home: "{{install_dir}}"
 
 - name: secure dir
   file:
@@ -40,6 +40,7 @@
   command: "{{install_dir}}/bin/prometheus --version"
   failed_when: false
   changed_when: false
+  ignore_errors: true
   register: check_version
 
 - name: download prometheus
@@ -48,7 +49,7 @@
     src: https://github.com/prometheus/prometheus/releases/download/v{{prometheus_version}}/prometheus-{{prometheus_version}}.linux-amd64.tar.gz
     dest: "{{install_dir}}/tmp"
   register: check_download
-  when: check_version.stdout is not defined
+  when: check_version.rc != 0
 
 - name: copy files
   shell: |
@@ -58,6 +59,8 @@
   args:
     chdir: "{{install_dir}}"
   when: check_download is changed
+  notify:
+    - restart prometheus
 
 - name: copy templates
   template:
@@ -65,25 +68,40 @@
     dest: "{{install_dir}}/etc/"
   loop:
     - prometheus.yml
-    - web.yml 
+    - web.yml
+  notify:
+    - reload prometheus
 
 - name: copy cert.crt
   copy:
     src: "./certs/{{cert_domain}}.crt"
     dest: "{{install_dir}}/etc/certs/{{cert_domain}}.crt"
+  notify:
+    - restart prometheus
 
 - name: copy cert.key
   copy:
     src: "./certs/{{cert_domain}}.key"
     dest: "{{install_dir}}/etc/certs/{{cert_domain}}.key"
+  notify:
+    - restart prometheus
 
 - name: create service file
   template:
     src: prometheus.service
     dest: /etc/systemd/system/{{service_name}}.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart prometheus
 
 - name: start service
-  systemd: name={{service_name}} state=started enabled=yes daemon_reload=yes
+  systemd: 
+    name: "{{service_name}}"
+    state: started
+    enabled: yes 
+    daemon_reload: yes
 
 - name: test service
   uri:

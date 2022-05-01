@@ -37,7 +37,7 @@
   roles:
     - role: common
     - role: auditd
-    # - role: prometheus
+    - role: prometheus
     # - role: loki
     - role: docker
     # - role: loki-driver
