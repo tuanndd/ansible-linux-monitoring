@@ -1,10 +1,19 @@
 ---
 # tasks file for prometheus
 - name: create group
-  group: name=prometheus system=true state=present
+  group: 
+    name: prometheus 
+    system: true 
+    state: present
 
 - name: create user
-  user: name=prometheus system=true shell=/usr/sbin/nologin group=prometheus createhome=false home={{install_dir}}
+  user: 
+    name: prometheus 
+    system: true 
+    shell: /usr/sbin/nologin
+    group: prometheus
+    createhome: false 
+    home: {{install_dir}}
 
 - name: secure dir
   file:
