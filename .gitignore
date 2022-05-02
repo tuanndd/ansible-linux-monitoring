@@ -1,2 +1,4 @@
 .vagrant
 certs/*
+.DS_Store
+.vscode/*
