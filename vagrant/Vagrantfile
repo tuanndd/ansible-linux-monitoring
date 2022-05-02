@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
       end
       
       node.vm.network "private_network", ip: "192.168.3.10#{i}"
-      node.vm.hostname = "node-#{i}"
+      node.vm.hostname = "h#{i}"
       
       # Config SSH keys
       ssh_pub_key = File.readlines("#{Dir.home}/.ssh/vagrant.pub").first.strip

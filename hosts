@@ -5,7 +5,7 @@ localhost
 ansible_connection=local
 
 [server]
-192.168.57.101
+192.168.3.102
 
 [server:vars]
 ansible_user=vagrant
@@ -13,7 +13,7 @@ ansible_connection=ssh
 ansible_ssh_private_key_file=~/.ssh/vagrant
 
 [client]
-192.168.57.102
+192.168.3.103
 
 [client:vars]
 ansible_user=vagrant

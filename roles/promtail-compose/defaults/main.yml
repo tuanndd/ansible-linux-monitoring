@@ -10,6 +10,6 @@ timezone: Asia/Ho_Chi_Minh
 
 loki_tentant: test
 
-loki_url: http://192.168.57.101:3100
+loki_url: http://192.168.3.102:3100
 
 cert_insecure: 1

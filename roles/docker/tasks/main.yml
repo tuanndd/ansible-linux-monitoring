@@ -27,6 +27,7 @@
       - docker-ce-cli
       - containerd.io
     state: present
+    update_cache: yes
 
 - name: add users to docker group
   user:

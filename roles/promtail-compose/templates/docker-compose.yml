@@ -13,10 +13,10 @@ services:
     restart: unless-stopped
     env_file:
       - tz.env
-{% if loki_host_ip is defined %}      
+{% if loki_host_ip is defined %}
     extra_hosts:
       - "{{loki_host_ip}}"
-{% endif %}      
+{% endif %}
     volumes:
       - promtail_data:/promtail
       - ./promtail-config.yml:/etc/promtail/promtail-config.yml
