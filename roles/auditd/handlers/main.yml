@@ -1,4 +1,6 @@
 ---
-# handlers file for 
+# handlers file for auditd
 - name: restart auditd
-  service: name=auditd state=restarted
+  service: 
+    name: auditd 
+    state: restarted

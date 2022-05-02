@@ -1,14 +1,23 @@
 ---
 # tasks file for loki-driver
-- name: copy templates
-  template:
-    src: daemon.json
-    dest: /etc/docker/
-    backup: yes
+- name: check if loki plugin has been installed
+  shell: docker plugin ls | grep -n "loki"
+  register: loki_plugin_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: True
+
 - name: install loki docker driver
-  shell: docker plugin install grafana/loki-docker-driver:{{ loki_version }} --alias loki --grant-all-permissions
-  ignore_errors: true
-- name: config docker
+  shell: >
+    docker plugin install grafana/loki-docker-driver:{{ loki_version }} 
+    --alias loki
+    --grant-all-permissions
+  retries: 5
+  delay: 10
+  when:
+    - loki_plugin_installed.rc != 0
+
+- name: change Docker default logging driver
   template:
     src: daemon.json
     dest: /etc/docker/

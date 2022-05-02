@@ -1,4 +1,6 @@
 ---
 # handlers file for loki-driver
 - name: restart docker
-  service: name=docker state=restarted
+  service: 
+    name: docker
+    state: restarted

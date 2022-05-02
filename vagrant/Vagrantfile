@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/focal64"
+	config.ssh.insert_key = false
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  (2..3).each do |i|
+    config.vm.define "node-#{i}" do |node|
+			node.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+				vb.cpus = 1
+
+        # See: https://github.com/joelhandwell/ubuntu_vagrant_boxes/issues/1
+        vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+      end
+      
+      node.vm.network "private_network", ip: "192.168.3.10#{i}"
+      node.vm.hostname = "h#{i}"
+      
+      # Config SSH keys
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/vagrant.pub").first.strip
+      node.vm.provision "shell", inline: <<-SHELL
+        echo "Adding SSH Public key"
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+      SHELL
+    end
+  end
+end

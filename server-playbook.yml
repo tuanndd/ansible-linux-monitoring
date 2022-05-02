@@ -33,7 +33,6 @@
 
     timezone: Asia/Ho_Chi_Minh
 
-  
   roles:
     - role: common
     - role: auditd

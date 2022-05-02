@@ -1,0 +1,7 @@
+.vagrant
+certs/*.crt
+certs/*.key
+certs/*.srl
+certs/*.csr
+.DS_Store
+.vscode/*

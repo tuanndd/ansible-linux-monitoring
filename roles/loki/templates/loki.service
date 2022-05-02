@@ -1,11 +1,13 @@
 [Unit]
 Description={{service_name}} service
-After=network.target
+Requires=network-online.target
+After=network-online.target
 
 [Service]
 Type=simple
 User=loki
-
+Group=loki
+ExecReload=/bin/kill -HUP $MAINPID
 ExecStart={{install_dir}}/bin/loki-linux-amd64 -config.file={{install_dir}}/etc/loki-config.yml
 
 [Install]

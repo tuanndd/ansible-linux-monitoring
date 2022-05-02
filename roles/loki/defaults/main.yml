@@ -1,6 +1,5 @@
 ---
 # defaults file for loki
-
 service_name: loki
 
 install_dir: /opt/loki

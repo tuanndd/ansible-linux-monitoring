@@ -18,12 +18,15 @@ prometheus_password: test
 cert_domain: "local.com"
 
 grafana_dashboards:
+  # Node Exporter Full
   - dashboard_id: '1860'
     revision_id: '26'
     datasource: 'Prometheus'
+  # Prometheus 2.0 Overview
   - dashboard_id: '3662'
     revision_id: '2'
     datasource: 'Prometheus'
+  # Loki2.0 Global Metrics
   - dashboard_id: '13407'
     revision_id: '1'
     datasource: 'Prometheus'
@@ -31,7 +34,7 @@ grafana_dashboards:
 grafana_datasources:
   - name: "Prometheus"
     type: "prometheus"
-    # editable: true
+    editable: true
     access: "proxy"
     url: "https://host.docker.internal:9090"
     basicAuth: true
@@ -42,7 +45,7 @@ grafana_datasources:
       basicAuthPassword: "{{prometheus_password}}"
   - name: "Loki"
     type: "loki"
-    # editable: true
+    editable: true
     access: "proxy"
     url: "http://host.docker.internal:3100"
     basicAuth: false

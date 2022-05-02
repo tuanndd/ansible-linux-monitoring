@@ -1,11 +1,13 @@
 [Unit]
 Description={{service_name}} service
-After=network.target
+Requires=network-online.target
+After=network-online.target
 
 [Service]
 Type=simple
 User=prometheus
-
+Group=prometheus
+ExecReload=/bin/kill -HUP $MAINPID
 ExecStart={{install_dir}}/bin/prometheus \
     --config.file={{install_dir}}/etc/prometheus.yml \
     --web.enable-lifecycle \

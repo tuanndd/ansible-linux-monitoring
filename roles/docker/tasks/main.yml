@@ -14,10 +14,12 @@
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+
 - name: Add apt repository for stable version
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
+
 - name: install docker
   apt:
     name:
@@ -25,22 +27,26 @@
       - docker-ce-cli
       - containerd.io
     state: present
+    update_cache: yes
+
 - name: add users to docker group
   user:
     name: "{{ item }}"
     groups: docker
     append: true
-  loop: "{{ docker_users }} "
+  loop: "{{ docker_users }}"
   when: docker_users | length > 0
 
 - name: check docker-compose version
   command: "/usr/local/bin/docker-compose version"
   failed_when: false
   changed_when: false
+  ignore_errors: true
   register: check_version
+
 - name: install docker-compose {{ docker_compose_version }}
   get_url:
     url: https://github.com/docker/compose/releases/download/{{docker_compose_version}}/docker-compose-Linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: '+x'
-  when: check_version.stdout is not defined
+  when: check_version.rc != 0

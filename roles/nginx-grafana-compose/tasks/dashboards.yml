@@ -3,7 +3,7 @@
     url: https://grafana.com/api/dashboards/{{ item.dashboard_id }}/revisions/{{ item.revision_id }}/download
     dest: "{{install_dir}}/grafana/provisioning/dashboards/{{ item.dashboard_id }}.json"
   with_items: "{{ grafana_dashboards }}"
-  # changed_when: false
+
 - name: Set the correct data source name in the dashboard
   replace:
     dest: "{{ install_dir }}/grafana/provisioning/dashboards/{{ item.dashboard_id }}.json"
@@ -11,7 +11,7 @@
     replace: '"{{ item.datasource }}"'
   changed_when: false
   with_items: "{{ grafana_dashboards }}"
-  # changed_when: false
+  
 - name: Create/Update dashboards file (provisioning)
   copy:
     dest: "{{install_dir}}/grafana/provisioning/dashboards/dashboard.yml"

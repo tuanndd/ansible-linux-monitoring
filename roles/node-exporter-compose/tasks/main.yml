@@ -12,6 +12,15 @@
   copy:
     src: .
     dest: "{{ install_dir }}/"
+  notify: restart node-exporter-compose 
+
+- name: create dir
+  file:
+    path: "{{install_dir}}/{{item}}"
+    state: directory
+  with_items:
+    - certs
+
 - name: copy templates
   template:
     src: "{{item}}"
@@ -19,16 +28,19 @@
   loop:
     - tz.env
     - web-config.yml
+  notify: restart node-exporter-compose 
 
 - name: copy cert.crt
   copy:
     src: "./certs/{{cert_domain}}.crt"
     dest: "{{install_dir}}/certs/{{cert_domain}}.crt"
+  notify: restart node-exporter-compose 
 
 - name: copy cert.key
   copy:
     src: "./certs/{{cert_domain}}.key"
     dest: "{{install_dir}}/certs/{{cert_domain}}.key"
+  notify: restart node-exporter-compose 
 
 - name: create service file
   template:
@@ -36,5 +48,9 @@
     dest: /etc/systemd/system/{{service_name}}.service
 
 - name: start service
-  systemd: name={{service_name}} state=started enabled=yes daemon_reload=yes
+  systemd: 
+    name: "{{service_name}}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
   

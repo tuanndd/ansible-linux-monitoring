@@ -1,6 +1,5 @@
 ---
 # defaults file for promtail-compose
-
 service_name: promtail
 
 docker_username: vagrant
@@ -14,6 +13,3 @@ loki_tentant: test
 loki_url: http://192.168.3.102:3100
 
 cert_insecure: 1
-
-# loki_url: https://loki.local.com
-# loki_host_ip: "loki.local.com:192.168.3.102" 
