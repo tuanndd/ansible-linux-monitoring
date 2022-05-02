@@ -1,6 +1,6 @@
 ---
 # tasks file for loki-driver
-- name: check if loki has been installed
+- name: check if loki plugin has been installed
   shell: docker plugin ls | grep -n "loki"
   register: loki_plugin_installed
   failed_when: false
