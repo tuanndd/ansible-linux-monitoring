@@ -18,7 +18,7 @@ I tested scripts on my own computer but there maybe still have some bugs. Please
 ### 1.1. Genenerate SSH key pairs
 
 ```bash
-ssh-keygen -t ecdsa -b 521 ~/.ssh/vagrant
+ssh-keygen -t ecdsa -b 521 -f ~/.ssh/vagrant
 ```
 
 ### 1.2. Install Ansible:
