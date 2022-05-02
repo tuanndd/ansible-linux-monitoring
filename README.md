@@ -7,78 +7,87 @@ This lab will setup a Linux monitoring system using Ansible. It uses Prometheus 
 I tested scripts on my own computer but there maybe still have some bugs. Please notify me at tuanndd@gmail.com if there is a new bug.
 
 # Guideline
-## 1. Run vagrant hosts
+
+## 1. Preparation (On your machine)
+
+### 1.1. Genenerate SSH key pairs
+
 ```bash
-# download Ubuntu 20.04 image to local disk
-vagrant box add bento/ubuntu-20.04 --insecure
+ssh-keygen -t ecdsa -b 521 ~/.ssh/vagrant
 ```
 
-### 1.1 Run server (hostname=h2, ip=192.168.57.101)
-```bash
-vagrant up h2
-vagrant ssh h2
+### 1.2. Install Ansible
 
+```bash
 sudo apt update
 sudo apt install ansible -y
 ansible --version
 sudo apt install python3-pip sshpass -y
 pip3 install passlib --user
-
-exit
 ```
 
-### 1.2 Run client (hostname=h3, ip=192.168.57.102)
+### 1.3. Provision 2 VMs
+
+- 192.168.3.102 (server, h2)
+
+- 192.168.3.103 (client, h3)
+
 ```bash
-vagrant up h3
-vagrant ssh h3
-
-sudo apt update
-
-exit
+vagrant up
 ```
 
-# 2. Install monitoring systems
-## 2.1 Create self-signed certs
+You can SSH into these VMs using:
+
+```bash
+ssh-add ~/.ssh/vagrant
+
+# SSH to server VM
+ssh vagrant@192.168.3.102
+
+# SSH to client VM
+ssh vagrant@192.168.3.103
+```
+
+### 1.4. Create self-signed certs
+
 This only for demo, you should use trusted CA, for example Let's Encrypt to create free valid SSL certs 
 
 ```bash
-vagrant ssh h2
-
 ./create-certs.sh
 
 exit
 ```
 
-## 2.2 Setup server
-```bash
-vagrant ssh h2
+## 2. Install monitoring systems
 
-vi server.yml
+### 2.1 Setup server
+
+```bash
+vi server-playbook.yml
 # update vars: username, password, domain, ... (optional)
 
-ansible-playbook server.yml
-
-exit
+ansible-playbook server-playbook.yml
 ```
 
-# 2.3 Setup client
+## 2.2 Setup client
 ```bash
-vagrant ssh h2
-
-vi client.yml
+vi client-playbook.yml
 # update vars: username, password, domain, ... (optional)
 
-ansible-playbook client.yml
-
-exit
+ansible-playbook client-playbook.yml
 ```
 
-# 2.4 Access Grafana dashboard
-Add this entry to file /etc/hosts on Vagrant computer:
+# 2.3 Access Grafana dashboard
+
+Add this entry to file /etc/hosts on your machine:
+
 ```
-192.168.57.101 grafana.local.com
+192.168.3.102 grafana.local.com
 ```
+
 Then access url https://grafana.local.com (login info: username=admin, password=admin)
+
+# Screenshots
 
 Here are some screens you will see on Grafana.
 
