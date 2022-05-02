@@ -6,9 +6,14 @@ This lab will setup a Linux monitoring system using Ansible. It uses Prometheus 
 
 I tested scripts on my own computer but there maybe still have some bugs. Please notify me at tuanndd@gmail.com if there is a new bug.
 
+# Prerequisite
+
+- MacOS/Ubuntu/Debian Machine
+- Vagrant
+
 # Guideline
 
-## 1. Preparation (On your machine)
+## 1. Preparation
 
 ### 1.1. Genenerate SSH key pairs
 
@@ -16,11 +21,22 @@ I tested scripts on my own computer but there maybe still have some bugs. Please
 ssh-keygen -t ecdsa -b 521 ~/.ssh/vagrant
 ```
 
-### 1.2. Install Ansible
+### 1.2. Install Ansible:
+
+- On Ubuntu/Debian
 
 ```bash
 sudo apt update
 sudo apt install ansible -y
+ansible --version
+sudo apt install python3-pip sshpass -y
+pip3 install passlib --user
+```
+
+- On MacOS:
+
+```bash
+sudo python -m pip install ansible
 ansible --version
 sudo apt install python3-pip sshpass -y
 pip3 install passlib --user
@@ -33,7 +49,9 @@ pip3 install passlib --user
 - 192.168.3.103 (client, h3)
 
 ```bash
+cd vagrant
 vagrant up
+cd ..
 ```
 
 You can SSH into these VMs using:
@@ -54,8 +72,6 @@ This only for demo, you should use trusted CA, for example Let's Encrypt to crea
 
 ```bash
 ./create-certs.sh
-
-exit
 ```
 
 ## 2. Install monitoring systems
