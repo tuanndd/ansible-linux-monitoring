@@ -41,5 +41,5 @@
     - role: docker
     - role: loki-driver
     - role: nginx-grafana-compose
-    # - role: node-exporter-compose
-    # - role: promtail-compose
+    - role: node-exporter-compose
+    - role: promtail-compose

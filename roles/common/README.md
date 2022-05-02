@@ -1,4 +1,8 @@
-Role Name
+Common
 =========
 
-Install common apt packages
+- Add hosts
+
+- Set timezone
+
+- Install common apt packages

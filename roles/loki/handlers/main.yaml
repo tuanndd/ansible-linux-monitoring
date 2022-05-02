@@ -3,11 +3,11 @@
   become: true
   systemd:
     daemon_reload: true
-    name: loki
+    name: "{{service_name}}"
     state: restarted
 
 - name: reload loki
   become: true
   systemd:
-    name: loki
+    name: "{{service_name}}"
     state: reloaded

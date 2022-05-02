@@ -7,3 +7,4 @@
       deleteDatasources: []
       datasources:
       {{ grafana_datasources | to_nice_yaml }}
+  notify: restart nginx-grafana-compose

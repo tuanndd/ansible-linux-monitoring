@@ -1,6 +1,5 @@
 ---
 # tasks file for nginx-grafana-compose
-
 - name: secure dir
   file:
     path: "{{install_dir}}"
@@ -23,7 +22,8 @@
 - name: copy files
   copy:
     src: .
-    dest: "{{ install_dir }}/"
+    dest: "{{install_dir}}/"
+  notify: restart nginx-grafana-compose 
 
 - name: copy templates
   template:
@@ -35,21 +35,24 @@
     - nginx/grafana.conf
     - nginx/loki.conf
     - nginx/snippets/self-signed.conf
+  notify: restart nginx-grafana-compose 
 
 - name: copy cert.crt
   copy:
     src: "./certs/{{cert_domain}}.crt"
     dest: "{{install_dir}}/nginx/certs/{{cert_domain}}.crt"
+  notify: restart nginx-grafana-compose 
 
 - name: copy cert.key
   copy:
     src: "./certs/{{cert_domain}}.key"
     dest: "{{install_dir}}/nginx/certs/{{cert_domain}}.key"
+  notify: restart nginx-grafana-compose 
 
-- include: datasources.yml
-  when: grafana_datasources != []
+- include_tasks: datasources.yml
+  when: grafana_datasources | length > 0
 
-- include: dashboards.yml
+- include_tasks: dashboards.yml
   when: grafana_dashboards | length > 0
 
 - name: create service file
@@ -58,7 +61,11 @@
     dest: /etc/systemd/system/{{service_name}}.service
 
 - name: start service
-  systemd: name={{service_name}} state=started enabled=yes daemon_reload=yes
+  systemd: 
+    name: "{{service_name}}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
 
 - name: test service
   uri:

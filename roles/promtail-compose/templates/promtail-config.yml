@@ -1,7 +1,5 @@
 server:
   disable: true
-  # http_listen_port: 9080
-  # grpc_listen_port: 0
 
 positions:
   filename: /promtail/positions.yaml

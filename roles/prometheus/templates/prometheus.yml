@@ -41,9 +41,9 @@ scrape_configs:
     basic_auth:
       username: {{node_exporter_username}}
       password: {{node_exporter_password}}
-{% if cert_insecure is defined %}          
+{% if cert_insecure is defined %}
     tls_config:
       insecure_skip_verify: true
-{% endif %}      
+{% endif %}
     static_configs:
       - targets: ["{{ node_exporter_targets | join('","') }}"]
