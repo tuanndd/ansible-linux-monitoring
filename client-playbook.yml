@@ -9,7 +9,7 @@
 
     cert_domain: local.com
     cert_insecure: 1
-
+    
     loki_host_ip: loki.local.com:192.168.57.101
     loki_url: https://test:test@loki.local.com
     loki_tentant: test

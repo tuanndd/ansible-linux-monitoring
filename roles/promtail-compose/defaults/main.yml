@@ -10,9 +10,6 @@ timezone: Asia/Ho_Chi_Minh
 
 loki_tentant: test
 
-# loki_url: http://192.168.57.101:3100
+loki_url: http://192.168.57.101:3100
 
 cert_insecure: 1
-
-loki_url: https://{{loki_username}}:{{loki_password}}@loki.local.com
-loki_host_ip: "loki.local.com:192.168.57.101" 

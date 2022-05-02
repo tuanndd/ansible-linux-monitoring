@@ -3,7 +3,8 @@
 - name: check if loki has been installed
   shell: docker plugin ls | grep -n "loki"
   register: loki_plugin_installed
-  changed_when: no
+  failed_when: false
+  changed_when: false
   ignore_errors: True
 
 - name: install loki docker driver

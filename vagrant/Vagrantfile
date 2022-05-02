@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
 	config.ssh.insert_key = false
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  (1..2).each do |i|
+  (2..3).each do |i|
     config.vm.define "node-#{i}" do |node|
 			node.vm.provider "virtualbox" do |vb|
         vb.memory = "1024"
@@ -14,12 +14,14 @@ Vagrant.configure("2") do |config|
         vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       end
       
-      node.vm.network "private_network", ip: "192.168.57.10#{i}"
+      node.vm.network "private_network", ip: "192.168.3.10#{i}"
       node.vm.hostname = "node-#{i}"
-  
+      
+      # Config SSH keys
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/vagrant.pub").first.strip
       node.vm.provision "shell", inline: <<-SHELL
         echo "Adding SSH Public key"
-        echo 'ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBABXcRu/ialJ/8CrNr+m6DPbCEka0k6v4Avsy3W4VKvW+WoTS5fPqweCweojoy+ZNCX5Fv3dT9FRnK0YCiNrgCtCFQDitiOCNcbl12FduXtd6JMBogY/4QWtN4VtX8fNFYCzGIB4Q/ClCA2WrWGVTd8vytd3zfcJpvyd5Rsx/aPPGcHv0Q==' >> /home/vagrant/.ssh/authorized_keys
+        echo #{ssh_pub_key} >> /home/$USER/.ssh/authorized_keys
       SHELL
     end
   end
