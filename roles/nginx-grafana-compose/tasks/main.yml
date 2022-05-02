@@ -18,6 +18,7 @@
     - grafana/provisioning
     - grafana/provisioning/dashboards
     - grafana/provisioning/datasources
+    - nginx/certs
 
 - name: copy files
   copy:
@@ -62,7 +63,6 @@
 - name: test service
   uri:
     url: "{{item}}"
-  
     validate_certs: no
     remote_src: true
   with_items:
@@ -71,4 +71,4 @@
   register: response
   until: response.status == 200
   retries: 10
-  delay: 600
+  delay: 20

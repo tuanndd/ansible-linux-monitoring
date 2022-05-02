@@ -40,6 +40,7 @@
   command: "/usr/local/bin/docker-compose version"
   failed_when: false
   changed_when: false
+  ignore_errors: true
   register: check_version
 
 - name: install docker-compose {{ docker_compose_version }}
@@ -47,4 +48,4 @@
     url: https://github.com/docker/compose/releases/download/{{docker_compose_version}}/docker-compose-Linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: '+x'
-  when: check_version.stdout is not defined
+  when: check_version.rc != 0
